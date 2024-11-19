@@ -6,30 +6,33 @@ from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from webdriver_manager.chrome import ChromeDriverManager
 import time
-from groq import Groq
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 
 # Setup WebDriver
 driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()))
 
-# Set up Groq client
-client = Groq(api_key='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')
-
 def scrape_price_croma(url, product, spec):
     try:
+        # Navigate to the URL
         driver.get(url.format(product=product, spec=spec))
-        time.sleep(5)  # Wait for page to load
         
-        # Parse HTML with BeautifulSoup
+        # Wait for the price element to load (adjust locator as needed)
+        wait = WebDriverWait(driver, 10)
+        price_element = wait.until(
+            EC.presence_of_element_located((By.CLASS_NAME, "amount.plp-srp-new-amount"))
+        )
+        
+        # Parse the page source with BeautifulSoup
         soup = BeautifulSoup(driver.page_source, 'html.parser')
         
-        # Extract details for Croma
+        # Extract data
         product_name_element = soup.find('a', rel='noopener noreferrer')
         price_element = soup.find('span', class_='amount plp-srp-new-amount')
         sprc = str(price_element)
-        finalprice = ''
-        for i in sprc:
-            if i.isdigit() or i == ',':
-                finalprice += i
+        finalprice = ''.join([i for i in sprc if i.isdigit() or i == ','])
+        
         rating = soup.find('span', class_='rating-text')
         offer = soup.find('span', class_='discount discount-mob-plp discount-newsearch-plp')
         delivery = soup.find('span', class_='delivery-text-msg')
@@ -52,6 +55,7 @@ def scrape_price_croma(url, product, spec):
     except Exception as e:
         print(f"An error occurred while scraping Croma: {e}")
         return {}
+
 
 def scrape_price_amazon(url, product, spec):
     try:
@@ -126,21 +130,19 @@ if uploaded_file is not None:
             st.write(f"### Comparison Results for {product} {spec}")
             st.markdown(df_product.to_html(escape=False), unsafe_allow_html=True)
             
-            # Prepare Groq API request for comparison summary
-            final_result = {"Croma": croma_data, "Amazon": amazon_data}
-            chat_completion = client.chat.completions.create(
-                messages=[
-                    {
-                        "role": "user",
-                        "content": f"Here is the data for two products: {json.dumps(final_result)}. Based on the data, which website (Croma or Amazon) is better for purchasing and why? This should look like how an end user would read a summary of this comparison."
-                    }
-                ],
-                model="llama3-70b-8192",
-            )
+            # Generate a summary directly
+            summary = f"For {product} {spec}, "
+            if croma_data and amazon_data:
+                summary += f"the price at Croma is {croma_data['Price']} and on Amazon is {amazon_data['Price']}. "
+                if croma_data['Price'] < amazon_data['Price']:
+                    summary += "Croma offers a better deal."
+                else:
+                    summary += "Amazon offers a better deal."
+            else:
+                summary += "data is incomplete for a proper comparison."
             
-            # Output the Groq response for each product
-            st.write("### Groq Summary:")
-            st.markdown(f"<div>{chat_completion.choices[0].message.content}</div>", unsafe_allow_html=True)
+            st.write("### Summary:")
+            st.write(summary)
 
 # Close the browser after scraping
 driver.quit()
