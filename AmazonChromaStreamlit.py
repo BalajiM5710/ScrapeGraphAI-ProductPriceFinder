@@ -1,29 +1,31 @@
 import streamlit as st
 import os
 
+# Function to install and link geckodriver
 @st.experimental_singleton
-def install_chromedriver():
-    # Install ChromeDriver using seleniumbase
-    os.system('sbase install chromedriver')
-    # Link ChromeDriver to the system path
-    os.system('ln -s /home/appuser/venv/lib/python3.7/site-packages/seleniumbase/drivers/chromedriver /home/appuser/venv/bin/chromedriver')
+def install_geckodriver():
+    os.system('sbase install geckodriver')  # Install geckodriver
+    os.system('ln -s /home/appuser/venv/lib/python3.7/site-packages/seleniumbase/drivers/geckodriver /home/appuser/venv/bin/geckodriver')
 
-_ = install_chromedriver()
+# Install the geckodriver (runs only once)
+_ = install_geckodriver()
 
+# Import Selenium
 from selenium import webdriver
-from selenium.webdriver.chrome.service import Service
-from selenium.webdriver.chrome.options import Options
+from selenium.webdriver import FirefoxOptions
 
-# Set up ChromeOptions
-options = Options()
-options.add_argument("--headless")  # Run in headless mode for Streamlit Cloud
-options.add_argument("--no-sandbox")
-options.add_argument("--disable-dev-shm-usage")
+# Set up Selenium to use Firefox in headless mode
+opts = FirefoxOptions()
+opts.add_argument("--headless")
+browser = webdriver.Firefox(options=opts)
 
-# Initialize ChromeDriver
-service = Service('/home/appuser/venv/bin/chromedriver')
-driver = webdriver.Chrome(service=service, options=options)
+# Perform a test by visiting a website
+browser.get('http://example.com')
 
-# Test the setup
-driver.get("http://example.com")
-st.write(driver.page_source)
+# Display the HTML source in the Streamlit app
+st.title("Selenium with Firefox on Streamlit Cloud")
+st.subheader("Page Source of Example.com")
+st.code(browser.page_source)
+
+# Close the browser after use
+browser.quit()
