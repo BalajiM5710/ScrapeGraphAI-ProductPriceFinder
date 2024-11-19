@@ -10,8 +10,8 @@ You can try out the application by using this [link](https://scrapegraphai-appuc
 This repository contains a web scraper for fetching product prices and details from Amazon, Croma, and Flipkart. The scraped data is enhanced with Groq API to generate insightful comparisons. This system is designed to support multiple products from a CSV and display the results on a neat Streamlit-based UI.
 
 ### Video Explanations:
-- **[Functionality Explanation Video](#)**  
-- **[Code Explanation Video](#)**
+- **[Functionality Explanation Video](#https://drive.google.com/file/d/1s1woh6f-o0Bdud7OUbRP6POdARYTK3Br/view?usp=sharing)**  
+- **[Code Explanation Video](#https://drive.google.com/file/d/1qEgiNwzQeqDGwbBjHsa9w1IfBfWvGbnI/view?usp=sharing)**
 
 ### Features & Highlights:
 - **Multiple Product Scraping**: Automatically fetch product prices, specs, and other details from Croma, Amazon, and Flipkart.
