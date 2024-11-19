@@ -7,12 +7,18 @@ from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 import time
 from groq import Groq
+from selenium.webdriver.chrome import service
 
-# Set up ChromeOptions for headless browser
-options = webdriver.ChromeOptions()
-options.add_argument('--headless')
-options.add_argument('--no-sandbox')
-options.add_argument('--disable-dev-shm-usage')
+def get_driver():
+    chrome_version = "120.0.6099.224"  # Replace with the correct version string of installed chromium
+    driver_path = ChromeDriverManager(version=chrome_version).install()
+    options = webdriver.ChromeOptions()
+    options.add_argument('--headless')
+    options.add_argument('--no-sandbox')
+    options.add_argument('--disable-dev-shm-usage')
+    
+    return webdriver.Chrome(service=Service(driver_path), options=options)
+
 
 # Set up Groq client
 client = Groq(api_key='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')
