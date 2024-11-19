@@ -13,14 +13,18 @@ from selenium.webdriver.chrome.service import Service
 from selenium import webdriver
 from webdriver_manager.chrome import ChromeDriverManager
 
-# Setup headless Chrome
 options = Options()
+options.add_argument("--disable-gpu")
 options.add_argument("--headless")
 options.add_argument("--no-sandbox")
 options.add_argument("--disable-dev-shm-usage")
 
-# Initialize WebDriver
-driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
+from webdriver_manager.core.utils import get_browser_version
+
+chrome_version = get_browser_version("/usr/bin/chromium")
+driver = webdriver.Chrome(
+    service=Service(ChromeDriverManager(chrome_version=chrome_version).install())
+)
 
 # Set up Groq client
 client = Groq(api_key='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')
