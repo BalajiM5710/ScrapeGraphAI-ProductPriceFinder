@@ -2,9 +2,9 @@ import json
 import pandas as pd
 import streamlit as st
 from bs4 import BeautifulSoup
+from webdriver_manager.chrome import ChromeDriverManager
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
-from webdriver_manager.chrome import ChromeDriverManager
 import time
 from groq import Groq
 
