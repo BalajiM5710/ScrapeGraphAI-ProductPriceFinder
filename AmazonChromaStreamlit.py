@@ -2,7 +2,7 @@ import streamlit as st
 import os
 
 # Function to install and link geckodriver
-@st.experimental_singleton
+@st.cache_resource
 def install_geckodriver():
     os.system('sbase install geckodriver')  # Install geckodriver
     os.system('ln -s /home/appuser/venv/lib/python3.7/site-packages/seleniumbase/drivers/geckodriver /home/appuser/venv/bin/geckodriver')
