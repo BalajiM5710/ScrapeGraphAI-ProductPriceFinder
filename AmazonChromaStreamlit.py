@@ -1,31 +1,36 @@
 import streamlit as st
-import os
 
-# Function to install and link geckodriver
-@st.cache_resource
-def install_geckodriver():
-    os.system('sbase install geckodriver')  # Install geckodriver
-    os.system('ln -s /home/appuser/venv/lib/python3.7/site-packages/seleniumbase/drivers/geckodriver /home/appuser/venv/bin/geckodriver')
+"""
+## Web scraping on Streamlit Cloud with Selenium
 
-# Install the geckodriver (runs only once)
-_ = install_geckodriver()
+[![Source](https://img.shields.io/badge/View-Source-<COLOR>.svg)](https://github.com/snehankekre/streamlit-selenium-chrome/)
 
-# Import Selenium
-from selenium import webdriver
-from selenium.webdriver import FirefoxOptions
+This is a minimal, reproducible example of how to scrape the web with Selenium and Chrome on Streamlit's Community Cloud.
 
-# Set up Selenium to use Firefox in headless mode
-opts = FirefoxOptions()
-opts.add_argument("--headless")
-browser = webdriver.Firefox(options=opts)
+Fork this repo, and edit `/streamlit_app.py` to customize this app to your heart's desire. :heart:
+"""
 
-# Perform a test by visiting a website
-browser.get('http://example.com')
+with st.echo():
+    from selenium import webdriver
+    from selenium.webdriver.chrome.options import Options
+    from selenium.webdriver.chrome.service import Service
+    from webdriver_manager.chrome import ChromeDriverManager
+    from webdriver_manager.core.os_manager import ChromeType
 
-# Display the HTML source in the Streamlit app
-st.title("Selenium with Firefox on Streamlit Cloud")
-st.subheader("Page Source of Example.com")
-st.code(browser.page_source)
+    @st.cache_resource
+    def get_driver():
+        return webdriver.Chrome(
+            service=Service(
+                ChromeDriverManager(chrome_type=ChromeType.CHROMIUM).install()
+            ),
+            options=options,
+        )
 
-# Close the browser after use
-browser.quit()
+    options = Options()
+    options.add_argument("--disable-gpu")
+    options.add_argument("--headless")
+
+    driver = get_driver()
+    driver.get("http://example.com")
+
+    st.code(driver.page_source)
