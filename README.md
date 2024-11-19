@@ -1,8 +1,9 @@
 
 # README.md
 
+
 ### Try It Out:
-You can try out the application by using this (#) and see how the scraper works in real-time.
+You can try out the application by using this [link](http://example.com) and see how the scraper works in real-time.
 
 ## Product Price Scraper with Groq API Integration
 
