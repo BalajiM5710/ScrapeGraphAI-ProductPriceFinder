@@ -20,15 +20,16 @@ options.add_argument("--no-sandbox")
 options.add_argument("--disable-dev-shm-usage")
 
 from selenium.webdriver.chrome.service import Service
-from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
+from selenium import webdriver
 from webdriver_manager.chrome import ChromeDriverManager
 
-# Fetch and use the specific version
+# Set ChromeDriver with a specific version
 driver = webdriver.Chrome(
-    service=Service(ChromeDriverManager(version="120.0.6099.224").install()), 
+    service=Service(ChromeDriverManager(version="120.0.6099.224").install()),  # Match your Chromium version
     options=Options()
 )
+
 
 # Set up Groq client
 client = Groq(api_key='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')
