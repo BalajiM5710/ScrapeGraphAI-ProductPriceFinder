@@ -8,15 +8,21 @@ from selenium.webdriver.chrome.service import Service
 import time
 from groq import Groq
 
+# Set up ChromeOptions for headless browser
 options = webdriver.ChromeOptions()
 options.add_argument('--headless')
 options.add_argument('--no-sandbox')
 options.add_argument('--disable-dev-shm-usage')
-driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
-
 
 # Set up Groq client
 client = Groq(api_key='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')
+
+# Create the Selenium WebDriver
+@st.cache_resource
+def get_driver():
+    return webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
+
+driver = get_driver()
 
 def scrape_price_croma(url, product, spec):
     try:
@@ -108,15 +114,15 @@ if uploaded_file is not None:
         spec = row['Spec']
         
         st.write(f"### Scraping data for {product} {spec}...")
-        
+
         with st.spinner(f'Scraping data from Croma for {product} {spec}...'):
             croma_url = "https://www.croma.com/searchB?q={product}%3Arelevance&text={product} {spec}"
             croma_data = scrape_price_croma(croma_url, product, spec)
-        
+
         with st.spinner(f'Scraping data from Amazon for {product} {spec}...'):
             amazon_url = "https://www.amazon.in/s?k={product}+{spec}&i=todays-deals&crid=2HFP9FZW24UX4&sprefix={product}+{spec}%2Ctodays-deals%2C186&ref=nb_sb_noss_"
             amazon_data = scrape_price_amazon(amazon_url, product, spec)
-        
+
         # Combine the data into a single DataFrame for display
         combined_data = []
         if croma_data:
@@ -129,7 +135,7 @@ if uploaded_file is not None:
             df_product = pd.DataFrame(combined_data)
             st.write(f"### Comparison Results for {product} {spec}")
             st.markdown(df_product.to_html(escape=False), unsafe_allow_html=True)
-            
+
             # Prepare Groq API request for comparison summary
             final_result = {"Croma": croma_data, "Amazon": amazon_data}
             chat_completion = client.chat.completions.create(
