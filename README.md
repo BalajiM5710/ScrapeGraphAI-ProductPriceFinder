@@ -33,7 +33,7 @@ This repository contains a web scraper for fetching product prices and details f
 2. **Scraping Logic**:
    - **Amazon Scraper**: Scrapes product prices, details, and links for Amazon. It uses **Selenium** and **BeautifulSoup** to parse HTML pages. The product is searched based on the product name and specification.
    - **Croma Scraper**: Similar to the Amazon scraper but specific to the Croma website.
-   - **Flipkart Scraper**: Uses the same principles to extract product information from Flipkart.
+
 
 3. **CSV Input**:  
    Users can upload a CSV file that contains product names and their specifications (e.g., “iPhone 15, 128GB”). Each product is then processed, and the relevant data is fetched from each eCommerce site. The results are shown in a neat table format.
@@ -61,8 +61,9 @@ Ensure your input CSV has the following format:
 ### Important Note:
 - **Avoid CSV Spamming**: Please do not input a large CSV file with too many products as it may slow down the API calls. Stick to **3 products** for optimal performance with Groq API.
 
+
 ### ScrapeGraphAI and Its Limitations:
-- **ScrapeGraphAI** was utilized for advanced LLM-based scraping. However, due to some unsolvable errors and time constraints, it could not be fully integrated into the Streamlit UI for seamless deployment. While it offers great potential for automated scraping and AI-driven insights, the limitations in deployment led to relying on standard scraping with Selenium for the UI version of the tool.
+- **ScrapeGraphAI** was used for advanced LLM-based scraping in the project. However, due to unsolvable errors and time constraints, it was not fully integrated into the **Streamlit** UI. Scripts like **`amazonscrapper.py`** and **`flipkartscrapper.py`** were intended to leverage ScrapeGraphAI for efficient scraping and insights but encountered deployment issues. Despite its potential, limitations prevented full deployment in the final UI version, leading to a shift to standard web scraping methods with **Selenium**.
 
 
 ### Groq API and LLM Used:
