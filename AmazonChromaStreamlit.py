@@ -161,5 +161,5 @@ def site_extraction_page():
                 st.markdown(f"<div>{chat_completion.choices[0].message.content}</div>", unsafe_allow_html=True)
 
 # ---------------- Main Function ----------------
-if _name_ == "_main_":
+if __name__ == "__main__":
     main_sidebar()
