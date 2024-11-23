@@ -145,7 +145,7 @@ def site_extraction_page():
                 
                 # Prepare Groq API request for comparison summary
                 final_result = {"Croma": croma_data, "Amazon": amazon_data}
-                client = Groq(api_key='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')
+                client = Groq(api_key='xxxxxxx')
                 chat_completion = client.chat.completions.create(
                     messages=[
                         {
